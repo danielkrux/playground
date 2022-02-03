@@ -1,0 +1,21 @@
+@import './home';
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+    Helvetica Neue, sans-serif;
+  background-color: #f7f4f4;
+  font-size: 18px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  object-position: top;
+}
+
+* {
+  box-sizing: border-box;
+}

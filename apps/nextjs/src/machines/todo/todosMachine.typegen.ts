@@ -3,8 +3,11 @@
 export interface Typegen0 {
   "@@xstate/typegen": true;
   eventsCausingActions: {
-    complete: "COMPLETE";
+    draftChange: "DRAFT.CHANGE";
     create: "CREATE";
+    delete: "DELETE";
+    toggleComplete: "COMPLETED";
+    update: "UPDATE";
   };
   internalEvents: {
     "xstate.init": { type: "xstate.init" };
@@ -18,9 +21,9 @@ export interface Typegen0 {
   };
   eventsCausingServices: {};
   eventsCausingGuards: {
-    notMax: "CREATE";
+    createGuard: "CREATE";
   };
   eventsCausingDelays: {};
-  matchesStates: "read" | "creating";
+  matchesStates: "loading" | "ready";
   tags: never;
 }
