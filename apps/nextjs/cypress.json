@@ -1,0 +1,10 @@
+{
+  "testFiles": "cypress/integration/*.spec.js",
+  "component": {
+    "componentFolder": "src/components",
+    "testFiles": "**/*test.tsx",
+    "viewportWidth": 600,
+    "viewportHeight": 400,
+    "video": false
+  }
+}
