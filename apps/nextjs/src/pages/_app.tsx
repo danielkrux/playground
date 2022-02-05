@@ -1,21 +1,12 @@
-import { useInterpret } from "@xstate/react";
-import { createContext } from "react";
-import { InterpreterFrom } from "xstate";
+import StateProvider from '../machines/XStateProvider';
 
-import { todosMachine } from "../machines/todo/todosMachine";
-import "../styles/globals.css";
-
-export const GlobalStateContext = createContext({
-  todoService: {} as InterpreterFrom<typeof todosMachine>,
-});
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
-  const todoService = useInterpret(todosMachine, { devTools: true });
-
   return (
-    <GlobalStateContext.Provider value={{ todoService }}>
+    <StateProvider>
       <Component {...pageProps} />
-    </GlobalStateContext.Provider>
+    </StateProvider>
   );
 }
 

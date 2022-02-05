@@ -1,13 +1,13 @@
 import { useSelector } from '@xstate/react';
 import React, { FormEvent, useContext } from 'react';
 
-import { GlobalStateContext } from './_app';
 import {
   getCompletedCount,
   getDraft,
   getCount,
 } from '../machines/todo/selectors';
 import Todos from '../components/Todos';
+import { GlobalStateContext } from '../machines/XStateProvider';
 
 export default function Home() {
   const { todoService } = useContext(GlobalStateContext);

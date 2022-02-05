@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
-import { useSelector } from "@xstate/react";
-import classNames from "classnames";
+import React, { useContext } from 'react';
+import { useSelector } from '@xstate/react';
+import classNames from 'classnames';
 
-import { getTodo, getTodos, Todo as TodoType } from "../../machines/todo";
-import { GlobalStateContext } from "../../pages/_app";
-import Editable from "../Editable";
+import { getTodos, Todo as TodoType } from '../../machines/todo';
+import Editable from '../Editable';
+import { GlobalStateContext } from '../../machines/XStateProvider';
 
 const Todos = () => {
   const { todoService } = useContext(GlobalStateContext);
@@ -13,11 +13,11 @@ const Todos = () => {
   const todos = useSelector(todoService, getTodos);
 
   const complete = (id: string) => {
-    send({ type: "COMPLETED", id });
+    send({ type: 'COMPLETED', id });
   };
 
   const updateTodo = (newTodo: TodoType) => {
-    send({ type: "UPDATE", todo: newTodo });
+    send({ type: 'UPDATE', todo: newTodo });
   };
 
   return (
@@ -35,10 +35,10 @@ const Todos = () => {
             onValueChange={(value) => updateTodo({ ...todo, title: value })}
             label={todo.title}
             labelProps={{
-              className: classNames({ "line-through	": todo.completed }),
+              className: classNames({ 'line-through	': todo.completed }),
             }}
             inputProps={{
-              className: "border-none p-0",
+              className: 'border-none p-0',
             }}
           />
         </div>

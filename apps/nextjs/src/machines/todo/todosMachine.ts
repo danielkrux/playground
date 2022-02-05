@@ -1,6 +1,6 @@
 import { assign, createMachine } from "xstate";
-import { nanoid } from "nanoid";
 import { assign as assignImmer } from "@xstate/immer";
+import { nanoid } from "nanoid";
 
 export type Todo = {
   id: string;
