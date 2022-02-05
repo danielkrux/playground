@@ -11,7 +11,7 @@ export type Events =
 
 export const editableMachine = createMachine(
   {
-    tsTypes: {} as import('./machine.typegen').Typegen0,
+    tsTypes: {} as import("./machine.typegen").Typegen0,
     schema: {
       context: {} as Context,
       events: {} as Events,

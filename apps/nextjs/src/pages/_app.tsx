@@ -1,5 +1,5 @@
-import StateProvider from '../machines/Context';
 
+import StateProvider from 'providers/StateProvider';
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {

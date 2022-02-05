@@ -1,10 +1,10 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import { useInterpret } from '@xstate/react';
 
 import { InterpreterFrom } from 'xstate';
-import { todosMachine } from './todo';
+import { todosMachine } from '../features/todo/machine';
 
-export const GlobalStateContext = createContext({
+const GlobalStateContext = createContext({
   todoService: {} as InterpreterFrom<typeof todosMachine>,
 });
 
@@ -16,5 +16,12 @@ const StateProvider = ({ children }) => {
     </GlobalStateContext.Provider>
   );
 };
+
+export function useGlobalState() {
+  const { todoService } = useContext(GlobalStateContext);
+  return {
+    todoService,
+  };
+}
 
 export default StateProvider;

@@ -1,16 +1,12 @@
 import { useSelector } from '@xstate/react';
-import React, { FormEvent, useContext } from 'react';
+import React, { FormEvent } from 'react';
 
-import {
-  getCompletedCount,
-  getDraft,
-  getCount,
-} from '../machines/todo/selectors';
-import Todos from '../components/Todos';
-import { GlobalStateContext } from '../machines/Context';
+import Todos from 'features/todo/components/Todos';
+import { getCompletedCount, getCount, getDraft } from 'features/todo/machine';
+import { useGlobalState } from 'providers/StateProvider';
 
 export default function Home() {
-  const { todoService } = useContext(GlobalStateContext);
+  const { todoService } = useGlobalState();
   const { send } = todoService;
 
   const draft = useSelector(todoService, getDraft);

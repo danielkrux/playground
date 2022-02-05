@@ -1,40 +1,11 @@
-import React, { useContext, useState } from 'react';
-import { useSelector } from '@xstate/react';
+import { useContext } from 'react';
 import classNames from 'classnames';
-import { MotionStyle, Reorder, useDragControls } from 'framer-motion';
+import { useDragControls, Reorder } from 'framer-motion';
 
-import { getTodos, Todo as TodoType } from 'machines/todo';
-import { GlobalStateContext } from 'machines/Context';
-
-import ReorderIcon from 'components/Icons/Reorder';
 import Editable from 'components/Editable';
-
-const Todos = () => {
-  const { todoService } = useContext(GlobalStateContext);
-  const { send } = todoService;
-  const todos = useSelector(todoService, getTodos);
-
-  const handleReorder = (todos: TodoType[]) => {
-    send({ type: 'REORDER', todos });
-  };
-
-  return (
-    <Reorder.Group
-      axis="y"
-      values={todos}
-      onReorder={handleReorder}
-      initial={false}
-      dragConstraints={{ top: 0 }}
-      className="overflow-hidden h-full"
-    >
-      {todos.map((todo) => (
-        <Todo key={todo.id} todo={todo} />
-      ))}
-    </Reorder.Group>
-  );
-};
-
-export default Todos;
+import ReorderIcon from 'components/Icons/Reorder';
+import { GlobalStateContext } from 'machines/Context';
+import { Todo as TodoType } from 'features/todo/machine';
 
 const Todo = ({ todo }) => {
   const dragControls = useDragControls();
@@ -85,3 +56,5 @@ const Todo = ({ todo }) => {
     </Reorder.Item>
   );
 };
+
+export default Todo;
