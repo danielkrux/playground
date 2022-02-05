@@ -31,8 +31,8 @@ export default function Home() {
   };
 
   return (
-    <div className="grid place-items-center h-screen ">
-      <div className="p-5 shadow-md rounded bg-white w-2/6 h-2/4">
+    <div className="grid place-items-center h-screen">
+      <div className="p-5 shadow-md rounded bg-white w-2/6 h-2/4 overflow-hidden">
         <form className="mb-2 flex w-full" onSubmit={create}>
           <input
             className="border-none rounded-l-lg w-full bg-gray-100 focus:no-border"

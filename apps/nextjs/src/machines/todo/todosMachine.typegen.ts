@@ -9,6 +9,7 @@ export interface Typegen0 {
     deleteCompleted: "DELETE.COMPLETED";
     toggleComplete: "COMPLETED";
     update: "UPDATE";
+    reorder: "REORDER";
   };
   internalEvents: {
     "xstate.init": { type: "xstate.init" };

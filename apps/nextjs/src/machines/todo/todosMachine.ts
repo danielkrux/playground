@@ -1,6 +1,6 @@
-import { assign, createMachine } from "xstate";
-import { assign as assignImmer } from "@xstate/immer";
-import { nanoid } from "nanoid";
+import { assign, createMachine } from 'xstate';
+import { assign as assignImmer } from '@xstate/immer';
+import { nanoid } from 'nanoid';
 
 export type Todo = {
   id: string;
@@ -15,25 +15,26 @@ export type TodosContext = {
 
 export type TodosEvents =
   | {
-      type: "CREATE";
+      type: 'CREATE';
     }
   | {
-      type: "DRAFT.CHANGE";
+      type: 'DRAFT.CHANGE';
       title: string;
     }
   | {
-      type: "DELETE";
+      type: 'DELETE';
       id: string;
     }
   | {
-      type: "COMPLETED";
+      type: 'COMPLETED';
       id: string;
     }
   | {
-      type: "UPDATE";
+      type: 'UPDATE';
       todo: Todo;
     }
-  | { type: "DELETE.COMPLETED" };
+  | { type: 'DELETE.COMPLETED' }
+  | { type: 'REORDER'; todos: Todo[] };
 
 //HELPERS
 const createTodo = (title: string): Todo => {
@@ -46,48 +47,51 @@ const createTodo = (title: string): Todo => {
 
 export const todosMachine = createMachine(
   {
-    tsTypes: {} as import("./todosMachine.typegen").Typegen0,
-    id: "todos",
+    tsTypes: {} as import('./todosMachine.typegen').Typegen0,
+    id: 'todos',
     schema: {
       context: {} as TodosContext,
       events: {} as TodosEvents,
     },
-    initial: "loading",
+    initial: 'loading',
     context: {
-      draft: "",
+      draft: '',
       todos: [
         {
-          id: "123",
-          title: "Get groceries",
+          id: '123',
+          title: 'Get groceries',
           completed: false,
         },
       ],
     },
     states: {
       loading: {
-        always: "ready",
+        always: 'ready',
       },
       ready: {},
     },
     on: {
-      "DRAFT.CHANGE": {
-        actions: "draftChange",
+      'DRAFT.CHANGE': {
+        actions: 'draftChange',
       },
       CREATE: {
-        cond: "createGuard",
-        actions: "create",
+        cond: 'createGuard',
+        actions: 'create',
       },
       DELETE: {
-        actions: "delete",
+        actions: 'delete',
       },
-      "DELETE.COMPLETED": {
-        actions: "deleteCompleted",
+      'DELETE.COMPLETED': {
+        actions: 'deleteCompleted',
       },
       COMPLETED: {
-        actions: "toggleComplete",
+        actions: 'toggleComplete',
       },
       UPDATE: {
-        actions: "update",
+        actions: 'update',
+      },
+      REORDER: {
+        actions: 'reorder',
       },
     },
   },
@@ -98,7 +102,7 @@ export const todosMachine = createMachine(
       create: assign((context) => {
         const newTodo = createTodo(context.draft);
         return {
-          draft: "",
+          draft: '',
           todos: [...context.todos, newTodo],
         };
       }),
@@ -121,6 +125,10 @@ export const todosMachine = createMachine(
         const todoIndex = ctx.todos.findIndex((t) => t.id === event.todo.id);
         ctx.todos[todoIndex] = event.todo;
       }),
+
+      reorder: assign((_, event) => ({
+        todos: event.todos,
+      })),
     },
 
     guards: {
