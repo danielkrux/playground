@@ -7,7 +7,7 @@ import {
   getCount,
 } from '../machines/todo/selectors';
 import Todos from '../components/Todos';
-import { GlobalStateContext } from '../machines/XStateProvider';
+import { GlobalStateContext } from '../machines/Context';
 
 export default function Home() {
   const { todoService } = useContext(GlobalStateContext);

@@ -1,4 +1,4 @@
-import StateProvider from '../machines/XStateProvider';
+import StateProvider from '../machines/Context';
 
 import '../styles/globals.css';
 

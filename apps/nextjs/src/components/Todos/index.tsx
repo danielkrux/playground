@@ -3,8 +3,8 @@ import { useSelector } from '@xstate/react';
 import classNames from 'classnames';
 
 import { getTodos, Todo as TodoType } from '../../machines/todo';
+import { GlobalStateContext } from '../../machines/Context';
 import Editable from '../Editable';
-import { GlobalStateContext } from '../../machines/XStateProvider';
 
 const Todos = () => {
   const { todoService } = useContext(GlobalStateContext);
