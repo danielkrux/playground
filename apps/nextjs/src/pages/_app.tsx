@@ -3,7 +3,7 @@ import { createContext } from "react";
 import { InterpreterFrom } from "xstate";
 
 import { todosMachine } from "../machines/todo/todosMachine";
-import "../styles/globals.scss";
+import "../styles/globals.css";
 
 export const GlobalStateContext = createContext({
   todoService: {} as InterpreterFrom<typeof todosMachine>,

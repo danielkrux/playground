@@ -32,6 +32,7 @@ export const editableMachine = createMachine(
           CANCEL: 'reading',
           COMMIT: {
             target: 'reading',
+            cond: 'checkValue',
             actions: ['commit', 'handleValueChange'],
           },
         },
@@ -45,6 +46,9 @@ export const editableMachine = createMachine(
       }),
       // used to communicate a change in the context to React
       handleValueChange: null,
+    },
+    guards: {
+      checkValue: (_, event) => Boolean(event.value.trim().length),
     },
   }
 );

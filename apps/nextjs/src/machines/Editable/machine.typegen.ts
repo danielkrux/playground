@@ -17,7 +17,9 @@ export interface Typegen0 {
     delays: never;
   };
   eventsCausingServices: {};
-  eventsCausingGuards: {};
+  eventsCausingGuards: {
+    checkValue: "COMMIT";
+  };
   eventsCausingDelays: {};
   matchesStates: "reading" | "editing";
   tags: never;

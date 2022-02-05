@@ -13,7 +13,7 @@ export type TodosContext = {
   todos: Todo[];
 };
 
-type TodosEvents =
+export type TodosEvents =
   | {
       type: "CREATE";
     }
@@ -32,7 +32,8 @@ type TodosEvents =
   | {
       type: "UPDATE";
       todo: Todo;
-    };
+    }
+  | { type: "DELETE.COMPLETED" };
 
 //HELPERS
 const createTodo = (title: string): Todo => {
@@ -79,6 +80,9 @@ export const todosMachine = createMachine(
       DELETE: {
         actions: "delete",
       },
+      "DELETE.COMPLETED": {
+        actions: "deleteCompleted",
+      },
       COMPLETED: {
         actions: "toggleComplete",
       },
@@ -102,6 +106,10 @@ export const todosMachine = createMachine(
       delete: assign({
         todos: (context, event) =>
           context.todos.filter((t) => t.id !== event.id),
+      }),
+
+      deleteCompleted: assign({
+        todos: (context) => context.todos.filter((t) => !t.completed),
       }),
 
       toggleComplete: assignImmer((ctx, event) => {

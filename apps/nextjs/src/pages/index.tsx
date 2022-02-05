@@ -1,68 +1,75 @@
-import { useActor, useSelector } from "@xstate/react";
-import React, { FormEvent, useContext, useEffect } from "react";
+import { useSelector } from '@xstate/react';
+import React, { FormEvent, useContext } from 'react';
 
-import { GlobalStateContext } from "./_app";
-import Editable from "../components/Editable";
-import { Todo } from "../machines/todo";
-import { getTodosCount } from "../machines/todo/selectors";
+import { GlobalStateContext } from './_app';
+import {
+  getCompletedCount,
+  getDraft,
+  getCount,
+} from '../machines/todo/selectors';
+import Todos from '../components/Todos';
 
-export function useTodoState() {
-  const globalServices = useContext(GlobalStateContext);
-  const [state, send] = useActor(globalServices.todoService);
-  const count = useSelector(globalServices.todoService, getTodosCount);
+export default function Home() {
+  const { todoService } = useContext(GlobalStateContext);
+  const { send } = todoService;
+
+  const draft = useSelector(todoService, getDraft);
+  const completedCount = useSelector(todoService, getCompletedCount);
+  const count = useSelector(todoService, getCount);
 
   const create = (e) => {
     e.preventDefault();
-    send({ type: "CREATE" });
-  };
-
-  const complete = (id: string) => {
-    send({ type: "COMPLETED", id });
+    send({ type: 'CREATE' });
   };
 
   const updateDraft = (e: FormEvent<HTMLInputElement>) => {
-    send({ type: "DRAFT.CHANGE", title: e.currentTarget.value });
+    send({ type: 'DRAFT.CHANGE', title: e.currentTarget.value });
   };
 
-  const updateTodo = (newTodo: Todo) => {
-    send({ type: "UPDATE", todo: newTodo });
+  const deleteCompleted = () => {
+    send({ type: 'DELETE.COMPLETED' });
   };
-
-  return { ...state.context, count, create, complete, updateDraft, updateTodo };
-}
-
-export default function Home() {
-  const { todos, count, draft, complete, create, updateDraft, updateTodo } =
-    useTodoState();
-
-  useEffect(() => {
-    console.log(todos);
-  }, [todos]);
 
   return (
-    <div className="todos">
-      <div className="todos-container">
-        <p>{count} todos</p>
-        <form className="todos-form" onSubmit={create}>
+    <div className="grid place-items-center h-screen ">
+      <div className="p-5 shadow-md rounded bg-white w-2/6 h-2/4">
+        <form className="mb-2 flex w-full" onSubmit={create}>
           <input
-            className="todos-input"
+            className="border-none rounded-l-lg w-full bg-gray-100 focus:no-border"
             type="text"
             onChange={updateDraft}
             value={draft}
+            placeholder="What needs to be done"
           />
-          <button type="submit">Create Todo</button>
+          <button
+            className="px-4 rounded-r-lg bg-gray-200 text-md"
+            type="submit"
+          >
+            Create
+          </button>
         </form>
-        {todos.map((t) => {
-          return (
-            <div className="todo" key={t.id}>
-              <span>[{t.completed ? " x" : ""} ]</span>&nbsp;
-              <Editable
-                onValueChange={(value) => updateTodo({ ...t, title: value })}
-                label={t.title}
-              />
-            </div>
-          );
-        })}
+        <div className="flex mb-4 justify-between">
+          <div className="flex gap-3">
+            <button className="text-sm rounded bg-blue-100 px-2 py-1">
+              All ({count})
+            </button>
+            <button className="text-sm rounded bg-blue-50 px-2 py-1">
+              Todo ({count - completedCount})
+            </button>
+            <button className="text-sm rounded bg-blue-50 px-2 py-1">
+              Completed ({completedCount})
+            </button>
+          </div>
+          {completedCount > 0 && (
+            <button
+              onClick={deleteCompleted}
+              className="text-sm rounded bg-blue-50 px-2 py-1 "
+            >
+              Delete completed ({completedCount})
+            </button>
+          )}
+        </div>
+        <Todos />
       </div>
     </div>
   );

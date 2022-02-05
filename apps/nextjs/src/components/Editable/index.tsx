@@ -1,15 +1,27 @@
-import React, { ComponentProps, FormEvent, KeyboardEvent } from 'react';
+import React, { ComponentProps, KeyboardEvent, useRef } from 'react';
 
 import { useMachine } from '@xstate/react';
 
-import { editableMachine } from '../../machines/Editable';
+import { editableMachine } from '../../machines/editable';
+import useClickOutside from '../../hooks/useClickOutside';
 
 export type Props = {
   label: string;
   onValueChange: (value: string) => void;
-} & ComponentProps<'div'>;
+  containerProps?: ComponentProps<'div'>;
+  labelProps?: ComponentProps<'p'>;
+  inputProps?: ComponentProps<'input'>;
+};
 
-const Editable = ({ label, onValueChange, ...props }: Props) => {
+const Editable = ({
+  label,
+  onValueChange,
+  labelProps,
+  inputProps,
+  ...props
+}: Props) => {
+  const containerRef = useRef<HTMLDivElement>();
+
   const [state, send] = useMachine(editableMachine, {
     context: { value: label },
     actions: {
@@ -17,12 +29,14 @@ const Editable = ({ label, onValueChange, ...props }: Props) => {
     },
   });
 
+  useClickOutside<HTMLDivElement>(containerRef, () => send({ type: 'CANCEL' }));
+
   const handleDoubleClick = () => {
     send('EDIT');
   };
 
-  const handleBlur = (e: FormEvent<HTMLInputElement>) => {
-    send({ type: 'COMMIT', value: e.currentTarget.value });
+  const handleBlur = () => {
+    send({ type: 'CANCEL' });
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -35,24 +49,25 @@ const Editable = ({ label, onValueChange, ...props }: Props) => {
   };
 
   return (
-    <div className='editable' data-testid='editable' {...props}>
+    <div ref={containerRef} data-testid="editable" {...props}>
       {state.matches('reading') && (
-        <div
-          className='editable-label'
-          data-testid='editable-label'
+        <p
+          {...labelProps}
+          data-testid="editable-label"
           onDoubleClick={handleDoubleClick}
         >
           {label}
-        </div>
+        </p>
       )}
       {state.matches('editing') && (
         <input
-          className='editable-input'
-          data-testid='editable-input'
-          onBlur={handleBlur}
+          type="text"
+          data-testid="editable-input"
           defaultValue={state.context.value}
+          onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          type='text'
+          className={inputProps.className}
+          autoFocus
         />
       )}
     </div>

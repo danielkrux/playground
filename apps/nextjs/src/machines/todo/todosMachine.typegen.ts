@@ -6,6 +6,7 @@ export interface Typegen0 {
     draftChange: "DRAFT.CHANGE";
     create: "CREATE";
     delete: "DELETE";
+    deleteCompleted: "DELETE.COMPLETED";
     toggleComplete: "COMPLETED";
     update: "UPDATE";
   };
