@@ -2,8 +2,8 @@ import React, { ComponentProps, KeyboardEvent, useRef } from 'react';
 
 import { useMachine } from '@xstate/react';
 
-import { editableMachine } from '../../machines/editable';
-import useClickOutside from '../../hooks/useClickOutside';
+import { editableMachine } from './machine';
+import useClickOutside from 'hooks/useClickOutside';
 
 export type Props = {
   label: string;

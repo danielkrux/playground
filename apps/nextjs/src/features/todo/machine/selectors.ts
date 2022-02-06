@@ -5,6 +5,8 @@ type State = StateFrom<typeof todosMachine>;
 
 export const getTodos = (state: State) => state.context.todos;
 
+export const getFilter = (state: State) => state.context.filter;
+
 export const getCount = (state: State) => state.context.todos.length;
 
 export const getCompletedCount = (state: State) =>

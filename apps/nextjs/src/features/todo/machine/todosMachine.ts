@@ -2,6 +2,8 @@ import { assign, createMachine } from 'xstate';
 import { assign as assignImmer } from '@xstate/immer';
 import { nanoid } from 'nanoid';
 
+export type FilterShow = 'all' | 'todo' | 'completed';
+
 export type Todo = {
   id: string;
   title: string;
@@ -11,6 +13,7 @@ export type Todo = {
 export type TodosContext = {
   draft: string;
   todos: Todo[];
+  filter: FilterShow;
 };
 
 export type TodosEvents =
@@ -34,7 +37,8 @@ export type TodosEvents =
       todo: Todo;
     }
   | { type: 'DELETE.COMPLETED' }
-  | { type: 'REORDER'; todos: Todo[] };
+  | { type: 'REORDER'; todos: Todo[] }
+  | { type: 'FILTER'; show: FilterShow };
 
 //HELPERS
 const createTodo = (title: string): Todo => {
@@ -56,6 +60,7 @@ export const todosMachine = createMachine(
     initial: 'loading',
     context: {
       draft: '',
+      filter: 'all',
       todos: [
         {
           id: '123',
@@ -93,6 +98,9 @@ export const todosMachine = createMachine(
       REORDER: {
         actions: 'reorder',
       },
+      FILTER: {
+        actions: 'filter',
+      },
     },
   },
   {
@@ -128,6 +136,10 @@ export const todosMachine = createMachine(
 
       reorder: assign((_, event) => ({
         todos: event.todos,
+      })),
+
+      filter: assign((_, event) => ({
+        filter: event.show,
       })),
     },
 

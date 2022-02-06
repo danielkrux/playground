@@ -1,19 +1,19 @@
 import { useSelector } from '@xstate/react';
 import React, { FormEvent } from 'react';
 
-import Todos from 'features/todo/components/Todos';
-import { getCompletedCount, getCount, getDraft } from 'features/todo/machine';
 import { useGlobalState } from 'providers/StateProvider';
+import { getDraft } from 'features/todo/machine';
+
+import Filter from 'features/todo/components/Filter';
+import Todos from 'features/todo/components/Todos';
 
 export default function Home() {
   const { todoService } = useGlobalState();
   const { send } = todoService;
 
   const draft = useSelector(todoService, getDraft);
-  const completedCount = useSelector(todoService, getCompletedCount);
-  const count = useSelector(todoService, getCount);
 
-  const create = (e) => {
+  const create = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     send({ type: 'CREATE' });
   };
@@ -22,49 +22,19 @@ export default function Home() {
     send({ type: 'DRAFT.CHANGE', title: e.currentTarget.value });
   };
 
-  const deleteCompleted = () => {
-    send({ type: 'DELETE.COMPLETED' });
-  };
-
   return (
     <div className="grid place-items-center h-screen">
-      <div className="p-5 shadow-md rounded bg-white w-2/6 h-2/4 overflow-hidden">
-        <form className="mb-2 flex w-full" onSubmit={create}>
+      <div className="p-5 h-2/4 overflow-hidden w-2/6">
+        <form className="mb-2 flex w-full " onSubmit={create}>
           <input
-            className="border-none rounded-l-lg w-full bg-gray-100 focus:no-border"
+            className="border-none shadow-md rounded-md w-full bg-white text-lg"
             type="text"
             onChange={updateDraft}
             value={draft}
             placeholder="What needs to be done"
           />
-          <button
-            className="px-4 rounded-r-lg bg-gray-200 text-md"
-            type="submit"
-          >
-            Create
-          </button>
         </form>
-        <div className="flex mb-4 justify-between">
-          <div className="flex gap-3">
-            <button className="text-sm rounded bg-blue-100 px-2 py-1">
-              All ({count})
-            </button>
-            <button className="text-sm rounded bg-blue-50 px-2 py-1">
-              Todo ({count - completedCount})
-            </button>
-            <button className="text-sm rounded bg-blue-50 px-2 py-1">
-              Completed ({completedCount})
-            </button>
-          </div>
-          {completedCount > 0 && (
-            <button
-              onClick={deleteCompleted}
-              className="text-sm rounded bg-blue-50 px-2 py-1 "
-            >
-              Delete completed ({completedCount})
-            </button>
-          )}
-        </div>
+        <Filter />
         <Todos />
       </div>
     </div>

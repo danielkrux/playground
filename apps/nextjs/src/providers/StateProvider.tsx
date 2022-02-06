@@ -9,7 +9,7 @@ const GlobalStateContext = createContext({
 });
 
 const StateProvider = ({ children }) => {
-  const todoService = useInterpret(todosMachine);
+  const todoService = useInterpret(todosMachine, { devTools: true });
   return (
     <GlobalStateContext.Provider value={{ todoService }}>
       {children}

@@ -10,6 +10,7 @@ export interface Typegen0 {
     toggleComplete: "COMPLETED";
     update: "UPDATE";
     reorder: "REORDER";
+    filter: "FILTER";
   };
   internalEvents: {
     "xstate.init": { type: "xstate.init" };
