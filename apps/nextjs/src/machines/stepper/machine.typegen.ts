@@ -1,12 +1,12 @@
 // This file was automatically generated. Edits will be overwritten
 
 export interface Typegen0 {
-  "@@xstate/typegen": true;
+  '@@xstate/typegen': true;
   eventsCausingActions: {
-    validate: "VALIDATE";
+    validate: 'VALIDATE';
   };
   internalEvents: {
-    "xstate.init": { type: "xstate.init" };
+    'xstate.init': { type: 'xstate.init' };
   };
   invokeSrcNameMap: {};
   missingImplementations: {
@@ -17,10 +17,10 @@ export interface Typegen0 {
   };
   eventsCausingServices: {};
   eventsCausingGuards: {
-    canGoThree: "NEXT";
-    canGoFour: "NEXT";
+    canGoThree: 'NEXT';
+    canGoFour: 'NEXT';
   };
   eventsCausingDelays: {};
-  matchesStates: "one" | "two" | "three" | "four";
+  matchesStates: 'one' | 'two' | 'three' | 'four';
   tags: never;
 }

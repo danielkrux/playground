@@ -1,9 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { useMachine } from '@xstate/react';
 
 import useRect from 'hooks/useRect';
 
 import useClickOutside from 'hooks/useClickOutside';
+import { INITIAL_CONTEXT, menuMachine } from 'machines/menu';
+
 import Trigger from './Trigger';
 import Content from './Content';
 
@@ -21,24 +24,40 @@ const MenuRoot = ({ items, triggerElement }: MenuProps) => {
   const menuRef = useRef();
   const [triggerRect, triggerRef] = useRect();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [state, send] = useMachine(menuMachine, {
+    devTools: true,
+    context: {
+      ...INITIAL_CONTEXT,
+      itemsLength: items.length,
+    },
+  });
 
-  useClickOutside(menuRef, () => setIsOpen(false), triggerRef);
+  useClickOutside(menuRef, () => send('CLOSE'), triggerRef);
+
+  const toggleOpen = () => {
+    if (state.matches('open')) {
+      send('CLOSE');
+    } else {
+      send('OPEN');
+    }
+  };
 
   return (
     <>
       <Trigger
         element={triggerElement}
-        setIsOpen={setIsOpen}
+        setIsOpen={toggleOpen}
         ref={triggerRef}
       />
       <AnimatePresence>
-        {isOpen && (
+        {state.matches('open') && (
           <Content
             items={items}
             triggerRect={triggerRect}
             ref={menuRef}
-            setIsOpen={setIsOpen}
+            setIsOpen={toggleOpen}
+            state={state}
+            send={send}
           />
         )}
       </AnimatePresence>

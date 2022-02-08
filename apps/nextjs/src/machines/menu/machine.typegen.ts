@@ -3,13 +3,18 @@
 export interface Typegen0 {
   '@@xstate/typegen': true;
   eventsCausingActions: {
-    clearValue: 'KEYDOWN';
-    saveQuery: 'KEYDOWN';
-    setFinalValue: 'xstate.after(300)#type-ahead.open.debouncing';
+    saveTypeAhead: 'KEYDOWN';
+    setFocusedItem: 'KEYDOWN_ARROW';
+    clearTypeAhead:
+      | 'xstate.after(300)#menu.open.readyForKeyPress'
+      | 'CLOSE'
+      | 'KEYDOWN_ESCAPE'
+      | 'KEYDOWN_ENTER';
+    clearFocusedIndex: 'CLOSE' | 'KEYDOWN_ESCAPE' | 'KEYDOWN_ENTER';
   };
   internalEvents: {
-    'xstate.after(300)#type-ahead.open.debouncing': {
-      type: 'xstate.after(300)#type-ahead.open.debouncing';
+    'xstate.after(300)#menu.open.readyForKeyPress': {
+      type: 'xstate.after(300)#menu.open.readyForKeyPress';
     };
     'xstate.init': { type: 'xstate.init' };
   };
@@ -21,13 +26,15 @@ export interface Typegen0 {
     delays: never;
   };
   eventsCausingServices: {};
-  eventsCausingGuards: {};
+  eventsCausingGuards: {
+    notMeta: 'KEYDOWN';
+    hasFocus: 'KEYDOWN_ENTER';
+  };
   eventsCausingDelays: {};
   matchesStates:
     | 'closed'
     | 'open'
-    | 'open.idle'
-    | 'open.debouncing'
-    | { open?: 'idle' | 'debouncing' };
+    | 'open.readyForKeyPress'
+    | { open?: 'readyForKeyPress' };
   tags: never;
 }

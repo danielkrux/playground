@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Portal } from 'react-portal';
 import classNames from 'classnames';
 import { motion, Variants } from 'framer-motion';
-import { useMachine } from '@xstate/react';
+import { StateFrom } from 'xstate';
 
-import { typeAheadMachine } from 'machines/typeAhead';
+import { menuMachine } from 'machines/menu';
 
 type MenuItem = {
   label: string;
@@ -15,6 +15,8 @@ type MenuContentProps = {
   triggerRect: DOMRect;
   items: MenuItem[];
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  state: StateFrom<typeof menuMachine>;
+  send: any;
 };
 
 const variants: Variants = {
@@ -30,16 +32,15 @@ const variants: Variants = {
 };
 
 const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
-  ({ items, triggerRect, setIsOpen }, ref) => {
-    const [state, send] = useMachine(typeAheadMachine);
+  ({ items, triggerRect, state, send }, ref) => {
     const [focused, setFocused] = useState<number>();
 
     const filteredItems = items.filter((i) => i);
 
     useEffect(() => {
-      if (state.context.value === '') return;
+      if (state.context.typeAhead === '') return;
       const index = filteredItems.findIndex((i) =>
-        i.label.toLowerCase().startsWith(state.context.value)
+        i.label.toLowerCase().startsWith(state.context.typeAhead)
       );
 
       //@ts-ignore
@@ -47,38 +48,42 @@ const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
         `[data-focusid=menu-item-${index}]`
       );
       element[0]?.focus();
-    }, [filteredItems, state.context.value]);
+    }, [filteredItems, ref, state.context.typeAhead]);
+
+    useEffect(() => {
+      if (state.context.focusedIndex === -1) return;
+      //@ts-ignore
+      const element = ref.current?.querySelectorAll(
+        `[data-focusid=menu-item-${state.context.focusedIndex}]`
+      );
+      element[0]?.focus();
+    }, [ref, state.context.focusedIndex]);
 
     useEffect(() => {
       if (typeof window === 'undefined') return;
 
       function handleKeyDown(e: KeyboardEvent) {
-        if (e.key === 'Enter') {
-          const click = items[focused]?.onClick;
-          if (click) {
-            click();
-            setIsOpen(false);
-          }
-        } else if (e.key === 'Escape') {
-          setIsOpen(false);
-        } else if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          //@ts-ignore
-          const elements = ref.current?.querySelectorAll(`#menu-item`);
-          elements?.[focused >= 0 ? focused + 1 : 0]?.focus();
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          //@ts-ignore
-          const elements = ref.current?.querySelectorAll(`#menu-item`);
-          elements?.[focused >= 0 ? focused - 1 : 0]?.focus();
-        } else {
-          send('KEYDOWN', { value: e.key });
+        switch (e.key) {
+          case 'Enter':
+            send('KEYDOWN_ENTER');
+            // items[state.context.focusedIndex].onClick();
+            break;
+          case 'Escape':
+            send('KEYDOWN_ESCAPE');
+            break;
+          case 'ArrowUp':
+          case 'ArrowDown':
+            send({ type: 'KEYDOWN_ARROW', value: e.key });
+            break;
+          default:
+            send({ type: 'KEYDOWN', value: e.key });
+            break;
         }
       }
 
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [focused, items]);
+    }, [focused, items, send, state.context.focusedIndex]);
 
     return (
       <Portal>
