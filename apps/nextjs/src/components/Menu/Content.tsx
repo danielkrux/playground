@@ -66,7 +66,7 @@ const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
         switch (e.key) {
           case 'Enter':
             send('KEYDOWN_ENTER');
-            // items[state.context.focusedIndex].onClick();
+            items[state.context.focusedIndex].onClick();
             break;
           case 'Escape':
             send('KEYDOWN_ESCAPE');

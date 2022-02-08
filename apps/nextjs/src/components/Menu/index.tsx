@@ -56,6 +56,7 @@ const MenuRoot = ({ items, triggerElement }: MenuProps) => {
             triggerRect={triggerRect}
             ref={menuRef}
             setIsOpen={toggleOpen}
+            // should probably set the machine in React.Context instead of drilling props...
             state={state}
             send={send}
           />
