@@ -3,6 +3,7 @@
 export interface Typegen0 {
   '@@xstate/typegen': true;
   eventsCausingActions: {
+    updateContext: 'UPDATE_CONTEXT';
     saveTypeAhead: 'KEYDOWN';
     setFocusedItem: 'KEYDOWN_ARROW';
     clearTypeAhead:
@@ -28,7 +29,6 @@ export interface Typegen0 {
   eventsCausingServices: {};
   eventsCausingGuards: {
     notMeta: 'KEYDOWN';
-    hasFocus: 'KEYDOWN_ENTER';
   };
   eventsCausingDelays: {};
   matchesStates:

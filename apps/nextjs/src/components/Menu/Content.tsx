@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ComponentProps, useEffect, useState } from 'react';
 import { Portal } from 'react-portal';
 import classNames from 'classnames';
 import { motion, Variants } from 'framer-motion';
@@ -6,7 +6,7 @@ import { StateFrom } from 'xstate';
 
 import { menuMachine } from 'machines/menu';
 
-type MenuItem = {
+type MenuItem = ComponentProps<'button'> & {
   label: string;
   onClick?: () => void;
 };
@@ -33,8 +33,6 @@ const variants: Variants = {
 
 const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
   ({ items, triggerRect, state, send }, ref) => {
-    const [focused, setFocused] = useState<number>();
-
     const filteredItems = items.filter((i) => i);
 
     useEffect(() => {
@@ -59,14 +57,20 @@ const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
       element[0]?.focus();
     }, [ref, state.context.focusedIndex]);
 
+    const handleItemClick = (item: MenuItem) => {
+      send('KEYDOWN_ENTER');
+      if (!item.onClick) return;
+      if (item.disabled) return;
+      item.onClick();
+    };
+
     useEffect(() => {
       if (typeof window === 'undefined') return;
 
       function handleKeyDown(e: KeyboardEvent) {
         switch (e.key) {
           case 'Enter':
-            send('KEYDOWN_ENTER');
-            items[state.context.focusedIndex].onClick();
+            handleItemClick(items[state.context.focusedIndex]);
             break;
           case 'Escape':
             send('KEYDOWN_ESCAPE');
@@ -83,7 +87,7 @@ const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
 
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [focused, items, send, state.context.focusedIndex]);
+    }, [items, send, state.context.focusedIndex]);
 
     return (
       <Portal>
@@ -100,19 +104,20 @@ const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
           }}
         >
           {filteredItems.map((item, index) => (
-            <div
-              className={classNames(
-                'hover:cursor-pointer hover:bg-gray-100 focus:bg-gray-100 focus:outline-none px-4 py-2 text-sm'
-              )}
+            <button
               id="menu-item"
-              data-focusid={`menu-item-${index}`}
-              key={item.label}
-              onClick={item.onClick && item.onClick}
               tabIndex={-1}
-              onFocus={() => setFocused(index)}
+              key={item.label}
+              disabled={item.disabled}
+              data-focusid={`menu-item-${index}`}
+              onClick={() => handleItemClick(item)}
+              className={classNames(
+                'hover:cursor-pointer hover:bg-gray-100 focus:bg-gray-100 focus:outline-none px-4 py-2 text-sm',
+                'disabled:bg-gray-100 disabled:hover:cursor-not-allowed disabled:text-gray-400'
+              )}
             >
               {item.label}
-            </div>
+            </button>
           ))}
         </motion.div>
       </Portal>

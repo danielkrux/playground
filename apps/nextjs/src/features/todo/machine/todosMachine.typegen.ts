@@ -1,19 +1,19 @@
 // This file was automatically generated. Edits will be overwritten
 
 export interface Typegen0 {
-  "@@xstate/typegen": true;
+  '@@xstate/typegen': true;
   eventsCausingActions: {
-    draftChange: "DRAFT.CHANGE";
-    create: "CREATE";
-    delete: "DELETE";
-    deleteCompleted: "DELETE.COMPLETED";
-    toggleComplete: "COMPLETED";
-    update: "UPDATE";
-    reorder: "REORDER";
-    filter: "FILTER";
+    draftChange: 'DRAFT.CHANGE';
+    create: 'CREATE';
+    delete: 'DELETE';
+    deleteCompleted: 'DELETE.COMPLETED';
+    toggleComplete: 'COMPLETED';
+    update: 'UPDATE';
+    reorder: 'REORDER';
+    filter: 'FILTER';
   };
   internalEvents: {
-    "xstate.init": { type: "xstate.init" };
+    'xstate.init': { type: 'xstate.init' };
   };
   invokeSrcNameMap: {};
   missingImplementations: {
@@ -24,9 +24,9 @@ export interface Typegen0 {
   };
   eventsCausingServices: {};
   eventsCausingGuards: {
-    createGuard: "CREATE";
+    createGuard: 'CREATE';
   };
   eventsCausingDelays: {};
-  matchesStates: "loading" | "ready";
+  matchesStates: 'loading' | 'ready';
   tags: never;
 }

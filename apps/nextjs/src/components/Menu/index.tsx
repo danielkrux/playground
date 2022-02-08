@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useMachine } from '@xstate/react';
 
@@ -12,6 +12,7 @@ import Content from './Content';
 
 type MenuItem = {
   label: string;
+  disabled?: boolean;
   onClick?: () => void;
 };
 
@@ -29,8 +30,13 @@ const MenuRoot = ({ items, triggerElement }: MenuProps) => {
     context: {
       ...INITIAL_CONTEXT,
       itemsLength: items.length,
+      focusableIndexes: [1, 2, 3], //todo get indexes of all items that are not disabled
     },
   });
+
+  useEffect(() => {
+    send({ type: 'UPDATE_CONTEXT', value: { itemsLength: items.length } });
+  }, [items.length, send]);
 
   useClickOutside(menuRef, () => send('CLOSE'), triggerRef);
 

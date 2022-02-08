@@ -24,7 +24,6 @@ const Button = ({ selected, children, ...props }: ButtonProps) => (
 type FilterProps = {};
 
 const Filter = ({}: FilterProps) => {
-  const [menuOpen, setMenuOpen] = useState(false);
   const { todoService } = useGlobalState();
   const { send } = todoService;
 
@@ -66,9 +65,10 @@ const Filter = ({}: FilterProps) => {
           </button>
         }
         items={[
-          completedCount && {
+          {
             label: 'Delete selected items',
             onClick: deleteCompleted,
+            disabled: !completedCount,
           },
           { label: 'Delete all items' },
           { label: 'Uncheck all items' },

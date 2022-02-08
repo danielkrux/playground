@@ -1,4 +1,5 @@
 import { assign, createMachine } from 'xstate';
+import { updateContext } from 'xstate/lib/utils';
 
 const META_KEYS = [
   'Enter',
@@ -13,9 +14,10 @@ const META_KEYS = [
 ];
 
 export type Context = {
-  focusedIndex: number;
   typeAhead: string;
   itemsLength: number;
+  focusedIndex: number;
+  focusableIndexes: number[];
 };
 
 export type Events =
@@ -24,10 +26,12 @@ export type Events =
   | { type: 'KEYDOWN'; value: string }
   | { type: 'KEYDOWN_ESCAPE'; value: string }
   | { type: 'KEYDOWN_ENTER'; value: string }
-  | { type: 'KEYDOWN_ARROW'; value: string };
+  | { type: 'KEYDOWN_ARROW'; value: string }
+  | { type: 'UPDATE_CONTEXT'; value: Partial<Context> };
 
-export const INITIAL_CONTEXT = {
+export const INITIAL_CONTEXT: Context = {
   focusedIndex: -1,
+  focusableIndexes: [],
   typeAhead: '',
   itemsLength: 0,
 };
@@ -70,7 +74,6 @@ export const menuMachine = createMachine(
               },
               KEYDOWN_ENTER: {
                 target: '#closed',
-                cond: 'hasFocus',
               },
               KEYDOWN_ARROW: {
                 target: 'readyForKeyPress',
@@ -84,9 +87,18 @@ export const menuMachine = createMachine(
         },
       },
     },
+    on: {
+      UPDATE_CONTEXT: {
+        actions: 'updateContext',
+      },
+    },
   },
   {
     actions: {
+      updateContext: assign((ctx, event) => ({
+        ...ctx,
+        ...event.value,
+      })),
       saveTypeAhead: assign((ctx, event) => ({
         typeAhead: ctx.typeAhead + event.value.toLowerCase(),
       })),
@@ -97,24 +109,25 @@ export const menuMachine = createMachine(
         focusedIndex: -1,
       })),
       setFocusedItem: assign((ctx, event) => {
+        const currentIndex = ctx.focusableIndexes.findIndex(
+          (i) => i === ctx.focusedIndex
+        );
         if (event.value === 'ArrowUp') {
           if (ctx.focusedIndex === 0) return;
           return {
-            focusedIndex: ctx.focusedIndex - 1,
+            focusedIndex: ctx.focusableIndexes[currentIndex - 1],
           };
         }
         if (event.value === 'ArrowDown') {
           if (ctx.focusedIndex === ctx.itemsLength - 1) return;
           return {
-            focusedIndex: ctx.focusedIndex + 1,
+            focusedIndex: ctx.focusableIndexes[currentIndex + 1],
           };
         }
       }),
     },
     guards: {
       notMeta: (_, event) => !META_KEYS.includes(event.value),
-      // IS_META: (_, event) => META_KEYS.includes(event.value),
-      hasFocus: (ctx) => ctx.focusedIndex >= 0,
     },
   }
 );
