@@ -4,6 +4,7 @@ import { useMachine } from '@xstate/react';
 
 import { editableMachine } from './machine';
 import useClickOutside from 'hooks/useClickOutside';
+import classNames from 'classnames';
 
 export type Props = {
   label: string;
@@ -66,7 +67,7 @@ const Editable = ({
           defaultValue={state.context.value}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          className={inputProps.className}
+          className={classNames(inputProps.className, 'w-full')}
           autoFocus
         />
       )}

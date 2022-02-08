@@ -1,9 +1,11 @@
 import { useSelector } from '@xstate/react';
 import classNames from 'classnames';
-import { ComponentProps } from 'react';
+import { ComponentProps, useState } from 'react';
 
 import { useGlobalState } from 'providers/StateProvider';
 import { FilterShow, getCompletedCount, getCount, getFilter } from '../machine';
+import Ellipses from 'components/Icons/Ellipses';
+import Menu from 'components/Menu';
 
 type ButtonProps = { selected?: boolean } & ComponentProps<'button'>;
 
@@ -22,6 +24,7 @@ const Button = ({ selected, children, ...props }: ButtonProps) => (
 type FilterProps = {};
 
 const Filter = ({}: FilterProps) => {
+  const [menuOpen, setMenuOpen] = useState(false);
   const { todoService } = useGlobalState();
   const { send } = todoService;
 
@@ -38,7 +41,7 @@ const Filter = ({}: FilterProps) => {
   };
 
   return (
-    <div className="flex mt-3 mb-4 justify-between items-center">
+    <div className="flex mt-3 mb-4 justify-between items-center h-10">
       <div className="flex gap-3 items-center">
         <Button onClick={() => handleFilter('all')} selected={filter === 'all'}>
           All ({count})
@@ -56,14 +59,22 @@ const Filter = ({}: FilterProps) => {
           Completed ({completedCount})
         </Button>
       </div>
-      {completedCount > 0 && (
-        <button
-          className="bg-white py-2 px-4 rounded text-sm"
-          onClick={deleteCompleted}
-        >
-          Delete completed ({completedCount})
-        </button>
-      )}
+      <Menu
+        triggerElement={
+          <button className="hover:bg-black/10 p-2 rounded-full h-10 w-10 grid place-items-center">
+            <Ellipses />
+          </button>
+        }
+        items={[
+          completedCount && {
+            label: 'Delete selected items',
+            onClick: deleteCompleted,
+          },
+          { label: 'Delete all items' },
+          { label: 'Uncheck all items' },
+          { label: 'Check all items' },
+        ]}
+      />
     </div>
   );
 };

@@ -65,6 +65,11 @@ export const todosMachine = createMachine(
         {
           id: '123',
           title: 'Get groceries',
+          completed: true,
+        },
+        {
+          id: '124',
+          title: 'Buy sneakers',
           completed: false,
         },
       ],
