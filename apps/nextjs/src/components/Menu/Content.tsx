@@ -39,7 +39,7 @@ const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
     useEffect(() => {
       if (state.context.value === '') return;
       const index = filteredItems.findIndex((i) =>
-        i.label.toLowerCase().includes(state.context.value)
+        i.label.toLowerCase().startsWith(state.context.value)
       );
 
       //@ts-ignore
@@ -54,22 +54,19 @@ const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
 
       function handleKeyDown(e: KeyboardEvent) {
         if (e.key === 'Enter') {
-          const click = items[focused].onClick;
+          const click = items[focused]?.onClick;
           if (click) {
             click();
             setIsOpen(false);
           }
-        }
-        if (e.key === 'Escape') {
+        } else if (e.key === 'Escape') {
           setIsOpen(false);
-        }
-        if (e.key === 'ArrowDown') {
+        } else if (e.key === 'ArrowDown') {
           e.preventDefault();
           //@ts-ignore
           const elements = ref.current?.querySelectorAll(`#menu-item`);
           elements?.[focused >= 0 ? focused + 1 : 0]?.focus();
-        }
-        if (e.key === 'ArrowUp') {
+        } else if (e.key === 'ArrowUp') {
           e.preventDefault();
           //@ts-ignore
           const elements = ref.current?.querySelectorAll(`#menu-item`);
@@ -81,7 +78,7 @@ const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
 
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [focused, items, ref, send, setIsOpen]);
+    }, [focused, items]);
 
     return (
       <Portal>

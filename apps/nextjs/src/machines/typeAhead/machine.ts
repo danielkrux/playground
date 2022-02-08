@@ -2,6 +2,7 @@ import { assign, createMachine } from 'xstate';
 
 export type Context = {
   value: string;
+  draft: string;
 };
 
 export type Events = { type: 'KEYDOWN'; value: string };
@@ -17,21 +18,29 @@ export const typeAheadMachine = createMachine(
     },
     context: {
       value: '',
+      draft: '',
     },
     states: {
       idle: {
-        entry: 'clearQuery',
         on: {
-          KEYDOWN: 'typing',
+          KEYDOWN: {
+            target: 'debouncing',
+            actions: ['clearValue', 'saveQuery'],
+          },
         },
       },
-      typing: {
-        entry: 'saveQuery',
+      debouncing: {
         on: {
-          KEYDOWN: { actions: 'saveQuery' },
+          KEYDOWN: {
+            actions: 'saveQuery',
+            target: 'debouncing',
+          },
         },
         after: {
-          300: 'idle',
+          300: {
+            target: 'idle',
+            actions: 'setFinalValue',
+          },
         },
       },
     },
@@ -39,9 +48,15 @@ export const typeAheadMachine = createMachine(
   {
     actions: {
       saveQuery: assign({
-        value: (ctx, event) => ctx.value + event.value,
+        draft: (ctx, event) => ctx.draft + event.value,
       }),
-      clearQuery: assign({ value: '' }),
+      clearValue: assign({
+        value: '',
+      }),
+      setFinalValue: assign({
+        value: (ctx) => ctx.draft,
+        draft: '',
+      }),
     },
   }
 );
