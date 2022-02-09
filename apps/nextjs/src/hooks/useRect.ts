@@ -7,9 +7,7 @@ const useRect = () => {
   const [bbox, setBbox] = useState<DOMRect>();
 
   const set = () =>
-    setBbox(
-      ref && ref.current ? ref.current.getBoundingClientRect() : undefined
-    );
+    setBbox(ref?.current ? ref.current.getBoundingClientRect() : undefined);
 
   useEffect(() => {
     set();

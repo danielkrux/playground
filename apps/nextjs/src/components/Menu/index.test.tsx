@@ -11,6 +11,10 @@ const menuItems: MenuItem[] = [
     label: 'Check all items',
     disabled: true,
   },
+  {
+    label: 'Check all items1',
+    onClick: () => {},
+  },
 ];
 
 describe('<Menu />', () => {
@@ -56,6 +60,11 @@ describe('<Menu />', () => {
 
     it('focuses first item on {downarrow}', () => {
       cy.get('body').type('{downarrow}');
+      getItem(0).should('be.focused');
+    });
+
+    it('focuses first item on {uparrow}', () => {
+      cy.get('body').type('{uparrow}');
       getItem(0).should('be.focused');
     });
 

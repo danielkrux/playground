@@ -1,5 +1,4 @@
 import { assign, createMachine } from 'xstate';
-import { updateContext } from 'xstate/lib/utils';
 
 const META_KEYS = [
   'Enter',
@@ -114,14 +113,16 @@ export const menuMachine = createMachine(
         );
         if (event.value === 'ArrowUp') {
           if (ctx.focusedIndex === 0) return;
+          const newIndex = currentIndex === -1 ? 0 : currentIndex - 1;
           return {
-            focusedIndex: ctx.focusableIndexes[currentIndex - 1],
+            focusedIndex: ctx.focusableIndexes[newIndex],
           };
         }
         if (event.value === 'ArrowDown') {
           if (ctx.focusedIndex === ctx.itemsLength - 1) return;
+          const newIndex = currentIndex + 1;
           return {
-            focusedIndex: ctx.focusableIndexes[currentIndex + 1],
+            focusedIndex: ctx.focusableIndexes[newIndex],
           };
         }
       }),
