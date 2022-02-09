@@ -20,6 +20,7 @@ const Page = () => {
   const updateDraft = (e: FormEvent<HTMLInputElement>) => {
     send({ type: 'DRAFT.CHANGE', title: e.currentTarget.value });
   };
+
   return (
     <div className="grid place-items-center h-screen">
       <div className="p-5 h-2/4 overflow-hidden w-3/6">

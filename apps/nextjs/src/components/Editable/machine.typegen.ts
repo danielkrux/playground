@@ -1,13 +1,13 @@
 // This file was automatically generated. Edits will be overwritten
 
 export interface Typegen0 {
-  "@@xstate/typegen": true;
+  '@@xstate/typegen': true;
   eventsCausingActions: {
-    commit: "COMMIT";
-    handleValueChange: "COMMIT";
+    commit: 'COMMIT';
+    handleValueChange: 'COMMIT';
   };
   internalEvents: {
-    "xstate.init": { type: "xstate.init" };
+    'xstate.init': { type: 'xstate.init' };
   };
   invokeSrcNameMap: {};
   missingImplementations: {
@@ -18,9 +18,9 @@ export interface Typegen0 {
   };
   eventsCausingServices: {};
   eventsCausingGuards: {
-    checkValue: "COMMIT";
+    checkValue: 'COMMIT';
   };
   eventsCausingDelays: {};
-  matchesStates: "reading" | "editing";
+  matchesStates: 'reading' | 'editing';
   tags: never;
 }

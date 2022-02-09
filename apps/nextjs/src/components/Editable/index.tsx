@@ -30,7 +30,7 @@ const Editable = ({
     },
   });
 
-  useClickOutside<HTMLDivElement>(containerRef, () => send({ type: 'CANCEL' }));
+  useClickOutside(containerRef, () => send({ type: 'CANCEL' }));
 
   const handleDoubleClick = () => {
     send('EDIT');

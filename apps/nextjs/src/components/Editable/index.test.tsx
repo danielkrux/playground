@@ -24,7 +24,7 @@ describe('<Editable />', () => {
 
   it('renders initial label on input cancel', () => {
     getEditableLabel().dblclick();
-    getEditableInput().type('test{esc}');
+    getEditableInput().type('test').type('{esc}');
     getEditableLabel().should('have.text', initialLabel);
   });
 
@@ -37,7 +37,7 @@ describe('<Editable />', () => {
 
   it('has new state on input commit', () => {
     getEditableLabel().dblclick();
-    getEditableInput().type(' new label{enter}');
+    getEditableInput().type(' new label').type('{enter}');
     getEditableLabel().dblclick();
     getEditableInput().should('have.value', 'test new label');
   });

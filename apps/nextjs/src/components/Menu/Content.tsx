@@ -5,11 +5,7 @@ import { motion, Variants } from 'framer-motion';
 import { StateFrom } from 'xstate';
 
 import { menuMachine } from 'machines/menu';
-
-type MenuItem = ComponentProps<'button'> & {
-  label: string;
-  onClick?: () => void;
-};
+import { MenuItem } from '.';
 
 type MenuContentProps = {
   triggerRect: DOMRect;
@@ -98,6 +94,7 @@ const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
           initial="closed"
           animate="open"
           exit="closed"
+          data-testid="menu-content"
           style={{
             top: triggerRect?.top + triggerRect?.height,
             left: triggerRect?.left + triggerRect?.width / 2,
@@ -109,8 +106,9 @@ const Content = React.forwardRef<HTMLDivElement, MenuContentProps>(
               tabIndex={-1}
               key={item.label}
               disabled={item.disabled}
-              data-focusid={`menu-item-${index}`}
               onClick={() => handleItemClick(item)}
+              data-focusid={`menu-item-${index}`}
+              data-testid={`menu-item-${index}`}
               className={classNames(
                 'hover:cursor-pointer hover:bg-gray-100 focus:bg-gray-100 focus:outline-none px-4 py-2 text-sm',
                 'disabled:bg-gray-100 disabled:hover:cursor-not-allowed disabled:text-gray-400'

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { ComponentProps, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useMachine } from '@xstate/react';
 
@@ -10,18 +10,17 @@ import { INITIAL_CONTEXT, menuMachine } from 'machines/menu';
 import Trigger from './Trigger';
 import Content from './Content';
 
-type MenuItem = {
+export type MenuItem = ComponentProps<'button'> & {
   label: string;
-  disabled?: boolean;
   onClick?: () => void;
 };
 
-type MenuProps = {
+type MenuProps = ComponentProps<'div'> & {
   triggerElement: React.ReactNode;
   items: MenuItem[];
 };
 
-const MenuRoot = ({ items, triggerElement }: MenuProps) => {
+const Menu = ({ items, triggerElement }: MenuProps) => {
   const menuRef = useRef();
   const [triggerRect, triggerRef] = useRect();
 
@@ -30,7 +29,7 @@ const MenuRoot = ({ items, triggerElement }: MenuProps) => {
     context: {
       ...INITIAL_CONTEXT,
       itemsLength: items.length,
-      focusableIndexes: [1, 2, 3], //todo get indexes of all items that are not disabled
+      focusableIndexes: [0, 1, 2, 3], //todo get indexes of all items that are not disabled
     },
   });
 
@@ -62,7 +61,7 @@ const MenuRoot = ({ items, triggerElement }: MenuProps) => {
             triggerRect={triggerRect}
             ref={menuRef}
             setIsOpen={toggleOpen}
-            // should probably set the machine in React.Context instead of drilling props...
+            // should probably set the machine in React context instead of drilling props...
             state={state}
             send={send}
           />
@@ -72,4 +71,4 @@ const MenuRoot = ({ items, triggerElement }: MenuProps) => {
   );
 };
 
-export default MenuRoot;
+export default Menu;
